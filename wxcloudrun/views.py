@@ -1,10 +1,12 @@
 import json
 import logging
 
+from jd.api.rest.UnionOpenCategoryGoodsGetRequest import UnionOpenCategoryGoodsGetRequest, Req
+from jd.api.rest.UnionOpenGoodsQueryRequest import UnionOpenGoodsQueryRequest
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from wxcloudrun.models import Counters
-
 
 logger = logging.getLogger('log')
 
@@ -88,4 +90,19 @@ def update_count(request):
                     json_dumps_params={'ensure_ascii': False})
     else:
         return JsonResponse({'code': -1, 'errorMsg': 'action参数错误'},
+                    json_dumps_params={'ensure_ascii': False})
+
+
+def category_goods(request):
+    a = UnionOpenCategoryGoodsGetRequest()
+    req = {
+        "parentId": 0,
+        "grade": 0,
+    }
+    a.req = req
+    try:
+        f = a.getResponse()
+        return JsonResponse({'code': 0, 'data': f})
+    except Exception as e:
+        return JsonResponse({'code': -1, 'errorMsg': e},
                     json_dumps_params={'ensure_ascii': False})
